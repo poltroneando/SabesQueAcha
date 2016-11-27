@@ -1,0 +1,19 @@
+﻿@model SabesQueAcha.Models.Comentario
+
+@if (Model != null)
+{
+    <div class="row">
+        <div class="col-sm-3">
+            <img class="img-responsive" src="~/Fotos/icon-user.png" style="max-height: 50px;" />
+            <br />
+            <span>@Model.Usuario.Login</span><br>
+            <span>@Model.DataComentario</span>
+        </div>
+        <div class="col-sm-9">
+            <blockquote>
+                <p>@Model.Descricao</p>
+            </blockquote>
+        </div>
+    </div>
+    <hr />
+}

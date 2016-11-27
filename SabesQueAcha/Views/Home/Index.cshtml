@@ -1,0 +1,94 @@
+﻿@model SabesQueAcha.Models.Usuario
+
+@{
+
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Landing Page</title>
+</head>
+<body>
+    <div class="jumbotron">
+
+        <div id="black"></div>
+
+
+        <div style="" class="animated fadeInDown">
+            <div class="container">
+                <div class="col-md-12">
+
+                    <h1><br class="visible-lg " /> </h1>
+
+                </div>
+                <div class="col-md-8">
+                    <h2 class="subtitle"</h2>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="main-wrapper">
+        <div class="col-md-7 main-content">
+            <h3>ENCONTRE O PRODUTO QUE DESEJA NO MENOR PREÇO POSSÍVEL!</h3>
+            <p>
+                Cadastre ou veja os diversos produtos que a comunidade encontrou por um ótimo preço!
+            </p>
+
+            <div class="white-box">
+                <ul>
+                    <li><p class="">Acesso rápido as promoções.</p></li>
+                    <li><p class="">Receba somente os produtos que lhe interessa.</p></li>
+                    <li><p class="">Divulgue os produtos de sua loja para um publico de qualidade.</p></li>
+                </ul>
+            </div><!-- /. End White Box 0-->
+
+            <p class="final-cta">CADASTRE-SE E DIVULGUE SEUS PRODUTOS E PROMOÇÕES!</p>
+        </div>
+        <div class="col-md-4 col-md-offset-1">
+            <div class="form-container">
+                <h4>Cadastre-se e receba promoções exclusivas!</h4>
+                @using (Html.BeginForm("PreCadastro", "Usuarios", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-group col-xs-12">
+
+                        @Html.LabelFor(model => model.Nome, htmlAttributes: new { @class = "" })
+                        @Html.EditorFor(model => model.Nome, new { htmlAttributes = new { @class = "form-control", @placeholder = "Nome Completo", @required = "required" } })
+                    </div>
+                    <div class="form-group col-xs-12">
+
+                        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "" })
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @placeholder = "E-mail", @required = "required" } })
+                    </div>
+                    <div class="form-group col-xs-12">
+
+                        @Html.LabelFor(model => model.Login, htmlAttributes: new { @class = "" })
+                        @Html.EditorFor(model => model.Login, new { htmlAttributes = new { @class = "form-control", @placeholder = "Login", @required = "required" } })
+                    </div>
+                    <div class="form-group col-xs-12">
+
+                        @Html.LabelFor(model => model.Senha, htmlAttributes: new { @class = "" })
+                        @Html.EditorFor(model => model.Senha, new { htmlAttributes = new { @class = "form-control", @placeholder = "Senha", @required = "required" } })
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="Cadastre-se" class="btn btn-primary btn-group-lg" />
+                    </div>
+                }
+
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>

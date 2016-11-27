@@ -1,0 +1,95 @@
+﻿@model List<SabesQueAcha.Models.Comentario>
+
+
+    <div id="modalComentario" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="modalTitle"></h4>
+                </div>
+                <div class="modal-body">
+
+                    <div id="ComentarioContainer">
+                    @if (Model.Count > 0 && Model != null)
+                    {
+
+                        foreach (var c in Model)
+                        {
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <img class="img-responsive" src="~/Fotos/icon-user.png" style="max-height: 50px;" />
+                                    <br />
+                                    <span>@c.Usuario.Login</span><br>
+                                    <span>Data: @c.DataComentario.ToString("dd/MM/yyyy")</span>
+                                </div>
+                                <div class="col-sm-9">
+                                    <blockquote>
+                                        <p>@c.Descricao</p>
+                                    </blockquote>
+                                </div>
+                            </div>
+                            <hr />
+                        }
+                    }
+
+
+                    </div>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <form id="formAddComentario">
+                            <input type="hidden" name="comentario.IdPromocao" value="@TempData["PromocaoId"]" id="PromocaoId" />
+                            <div class="form-group">
+                                <textarea rows="5" name="comentario.Descricao" class="form-control" placeholder="Deixe seu comentario ...."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <input class="btn btn-primary btn-lg pull-right" value="Enviar" type="submit" />
+                            </div>
+                        </form>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("Index", "Login")" class="btn btn-block btn-primary">Faça Login para Comentar</a>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#formAddComentario').validate({
+            rules: {
+                'comentario.IdPromocao': { required: true },
+                'comentario.Descricao': { required: true }
+            },
+            messages: {
+                'comentario.IdPromocao': { required: 'PromocaoId - Esse é um ítem obrigatório' },
+                'comentario.Descricao': { required: 'Informe o comentário.' }
+            },
+            submitHandler: function (form) {
+
+                loadingModal('show');
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("AdicionarComentario", "Promocoes")',
+                    data: $(form).serialize(),
+                    dataType: 'html',
+                    success: function (data) {
+                        loadingModal('hide');
+                        $('#ComentarioContainer').append(data);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        loadingModal('hide');
+                        swal("Oooops", "Erro ao adicionar os comentários", "error");
+                    }
+                });
+                return false;
+            }
+        });
+    });
+</script>

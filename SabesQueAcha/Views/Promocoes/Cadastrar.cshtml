@@ -1,0 +1,101 @@
+﻿@model List<SabesQueAcha.Models.Categoria>
+
+<div class="row">
+    <div class="col-md-12">
+        <form id="formAddPromocao" name="formAddPromocao">
+            @if (User.IsInRole("Lojista"))
+            {
+                <input type="hidden" name="f.IdLojista" value="@Session["LojistaId"]" />
+
+                <div class="form-group">
+                    <input type="checkbox" name="f.FlagLoja" value="true" /> Esse produto é de sua Loja?
+                </div>
+            }
+            <div class="form-group">
+                <label class="control-label">Selecione a Categoria</label>
+                <select class="form-control" name="p.IdCategoria" id="P_IdCategoria">
+                    <option>Selecione...</option>
+                    @foreach(var c in Model){
+                        <option value="@c.IdCategoria">@c.Descricao</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Título</label>
+                <input type="text" name="p.Titulo" class="form-control" placeholder="Digite o Título da Promoção..." />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Descrição</label>
+                <textarea class="form-control" rows="2"></textarea>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Url da Promoção</label>
+                <input type="text" name="p.UrlPromocao" class="form-control" placeholder="Informe a Url da Promoção..." />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Preço</label>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">R$</span>
+                    <input type="text" class="form-control money" name="p.Preco" aria-describedby="basic-addon1">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Url da Foto</label>
+                <input type="text" name="p.Foto" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary btn-lg pull-right" value="Cadastrar"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('.money').mask("#.##0,00", { reverse: true });
+
+        jQuery.validator.addMethod("isUrl", function (value, element) {
+            return this.optional(element) || (value.indexOf('http://') >= 0);
+        }, "O valor desse campo deve estar no formato de URL.");
+
+
+        $('#formAddPromocao').validate({
+            rules: {
+                "p.IdCategoria": { required: true },
+                "p.Titulo": { required: true, maxlength: 49 },
+                "p.Foto": { required: true, isUrl: true },
+                "p.UrlPromocao": { required: true },
+                "p.Preco": { required: true },
+                "p.Descricao": { required: true }
+            },
+            messages: {
+                "p.IdCategoria": { required: 'Selecione uma Categoria' },
+                "p.Titulo": { required: 'Informe o título da Promoção.',  maxlength: 'O tamanho máximo do Titulo deve ser 50!' },
+                "p.Foto": { required: 'Informe a Url Da Foto do Produto' },
+                "p.UrlPromocao": { required: 'Informe a Url da Promoção' },
+                "p.Preco": { required: 'Informe o Preço' },
+                "p.Descricao": { required: 'Informe a Descriçõ da Promoção.' }
+            },
+            submitHandler: function (form) {
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("SalvarPromocao", "Promocoes")',
+                    data: $(form).serialize(),
+                    dataType: 'json',
+                    success: function(data) {
+                        if (data.sucesso) {
+                            swal("Sucesso!", data.mensagem, "success");
+                        }
+                        else {
+                            swal("Oooops", data.mensagem, "error");
+                        }
+                    }
+                });
+                return false;
+            }
+        });
+    });
+
+</script>

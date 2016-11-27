@@ -1,0 +1,107 @@
+﻿@model List<SabesQueAcha.Models.Promocao>
+<link rel="stylesheet" type="text/css" href="~/Content/Products.css" />
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <label class="control-label">Filtre por Categoria</label>
+            <select class="form-control" id="SelectCategorias">
+
+                <option>Selecione</option>
+                <option>Todos</option>
+
+                @foreach (var c in Session["Categorias"] as List<SabesQueAcha.Models.Categoria>)
+                {
+                    <option value="@c.IdCategoria"
+                            @if (c.IdCategoria == ViewBag.SelectedCategoria) {
+                                @:selected
+                            }
+                            >@c.Descricao</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <hr />
+
+    <div id="products" class="row list-group">
+        @foreach (var item in Model)
+        {
+            <div class="item col-xs-12 col-lg-4">
+                <div class="thumbnail">
+                    <a href="@item.UrlPromocao" target="_blank">
+                        <img class="group list-group-image" src="@Html.DisplayFor(modelItem => item.Foto)" alt="@Html.DisplayFor(modelItem => item.Titulo)" />
+                    </a>
+                    <div class="caption">
+                        <h4 class="group inner list-group-item-heading">
+                            @Html.DisplayFor(modelItem => item.Titulo)
+                        </h4>
+                        <p class="group inner list-group-item-text">
+                            @Html.DisplayFor(modelItem => item.Descricao)
+                        </p>
+                        <div class="row">
+                            <div class="col-xs-12 col-md-6">
+                                <p class="lead">
+                                    @Html.DisplayFor(modelItem => item.Preco)
+                                </p>
+                                <span>Data: @item.DataPublicacao.ToString("dd/MM/yyyy")</span>
+                            </div>
+                            <div class="col-xs-12 col-md-6">
+                                <a class="btn btn-success" target="_blank" href="@item.UrlPromocao">Ver na Loja</a>
+                                <a class="btn btn-info btComentario" title="@item.Titulo" data-promoid="@item.IdPromocao" href="#">Comentarios</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div id="ContainerModalComentarios"></div>
+
+
+
+
+                
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        //
+        $('#SelectCategorias').on('change', function () {
+            if (this.value != 'Todos' && this.value != 'Selecione') {
+                window.location = "/Promocoes/Index?CategoriaId=" + this.value;
+            }
+            else {
+                window.location = "/Promocoes/Index/";
+            }
+        });
+
+        //
+        $('.btComentario').on('click', function (e) {
+            var PromocaoId = $(this).data('promoid');
+
+            loadingModal('show');
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("_Comentarios", "Promocoes")',
+                data: {
+                    PromocaoId : PromocaoId
+                },
+                dataType: 'html',
+                success: function (data) {
+                    loadingModal('hide');
+                    $('#ContainerModalComentarios').empty();
+                    $('#ContainerModalComentarios').append(data);
+
+                    $('#modalComentario').modal('show')
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    loadingModal('hide');
+                    swal("Oooops", "Erro ao obter os comentários", "error");
+                }
+            });
+        });
+    });
+</script>

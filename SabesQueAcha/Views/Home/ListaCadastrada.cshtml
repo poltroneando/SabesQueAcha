@@ -1,0 +1,35 @@
+﻿@model IEnumerable<SabesQueAcha.Models.Usuario>
+
+@{
+    
+}
+
+<table class="table table-condensed table-hover table-responsive">
+    <tr>        
+        <th>
+            @Html.DisplayNameFor(model => model.Nome)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Login)
+        </th>        
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>            
+            <td>
+                @Html.DisplayFor(modelItem => item.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Login)
+            </td>            
+        </tr>
+    }
+
+</table>
